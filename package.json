@@ -1,6 +1,6 @@
 {
-  "name": "minimal-react-spa-starter",
-  "description": "Minimalist React SPA starter",
+  "name": "keymask-frontend-demo",
+  "description": "KeyMask demo",
   "version": "1.0.0",
   "main": "src/index.tsx",
   "repository": "",

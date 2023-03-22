@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {connect} from 'redux-bundler-react';
 
+
 const Form: React.FC = () => {
 
     async function postData(url = "", data = {}) {
@@ -20,8 +21,6 @@ const Form: React.FC = () => {
         });
         return response.json(); // parses JSON response into native JavaScript objects
     }
-
-
 
     const [email, setEmail] = useState('');
     const [secret, setSecret] = useState('');

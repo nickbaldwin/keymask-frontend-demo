@@ -8,9 +8,6 @@ const App: React.FC = (store) => {
     console.log('name: ' + process.env.NAME);
     console.log('version: ' + process.env.VERSION);
 
-
-
-
     return (
         <Provider store={store}>
             <Layout/>

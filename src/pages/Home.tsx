@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'redux-bundler-react';
-import Form from '../Form';
+import Form from 'components/Form';
 
 const Home: React.FC = () => (
     <div>

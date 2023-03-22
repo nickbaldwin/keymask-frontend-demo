@@ -1,7 +1,7 @@
 // import React from 'react';
 import {render} from 'react-dom';
 import getStore from './bundles';
-import App from './components/App';
+import App from './app/App';
 import cache from './utils/cache';
 
 // this is entirely optional, but here we try to pull starting data
