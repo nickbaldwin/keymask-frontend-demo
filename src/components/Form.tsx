@@ -1,26 +1,8 @@
 import React, {useState} from 'react';
 import {connect} from 'redux-bundler-react';
+import {postData} from '../api/fetch';
 
-
-const Form: React.FC = () => {
-
-    async function postData(url = "", data = {}) {
-        // Default options are marked with *
-        const response = await fetch(url, {
-            method: "POST", // *GET, POST, PUT, DELETE, etc.
-            mode: "cors", // no-cors, *cors, same-origin
-            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: "same-origin", // include, *same-origin, omit
-            headers: {
-                "Content-Type": "application/json",
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            redirect: "follow", // manual, *follow, error
-            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            body: JSON.stringify(data), // body data type must match "Content-Type" header
-        });
-        return response.json(); // parses JSON response into native JavaScript objects
-    }
+const Form = ({doPostSecret}) => {
 
     const [email, setEmail] = useState('');
     const [secret, setSecret] = useState('');
@@ -36,10 +18,15 @@ const Form: React.FC = () => {
         }
     }
     const handleSubmit = (e) => {
+        console.log(typeof e);
         e.preventDefault();
         setEmail('');
         setSecret('');
 
+        // todo - still need to get toy server to accept post
+        doPostSecret();
+
+        // in meantime, can post to mock server
         postData("https://m128e.wiremockapi.cloud/addsecret", { answer: 42 }).then((data) => {
             setMessage(data.message);
         });
@@ -69,4 +56,7 @@ const Form: React.FC = () => {
     );
 };
 
-export default connect(Form);
+export default connect(
+    'doPostSecret',
+    Form
+);

@@ -1,10 +1,12 @@
 import {connect} from 'redux-bundler-react';
 import React from 'react';
 
-const SecretsList = ({secretsData}) => (
-    <article>
-        <h1>People Data</h1>
-        {!secretsData && <p>No data yet</p>}
+const SecretsList = ({secretsData, secretsFetchFailed, secretsLoading, }) => (
+    <div>
+        <h1>Secrets</h1>
+        {secretsLoading && <p>No data yet - loading</p>}
+        {!secretsData && <p>No data</p>}
+        {secretsFetchFailed && <p>There is a problem fetching the secrets :-(</p>}
         {secretsData && <ul>
             {secretsData.map((s, _key) => (
                 <ul key={_key}>
@@ -14,11 +16,12 @@ const SecretsList = ({secretsData}) => (
                 </ul>
             ))}
         </ul>}
-    </article>
+    </div>
 );
 
 export default connect(
+    'selectSecretsFetchFailed',
     'selectSecretsData',
-
+    'selectSecretsLoading',
     SecretsList
 );

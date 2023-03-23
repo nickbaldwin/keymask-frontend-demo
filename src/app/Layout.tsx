@@ -1,22 +1,15 @@
-
-import {connect} from 'redux-bundler-react';
+// todo typings
 import {getNavHelper}  from 'internal-nav-helper';
 import React from "react";
+import {connect} from 'redux-bundler-react';
 
-const navHelper = getNavHelper;
+import {navItems} from './nav';
 
 const Layout = ({doUpdateUrl, route, pathname}) => {
-    const navItems = [
-        {url: '/', label: 'Home'},
-        {url: '/people', label: 'People List'},
-        {url: '/secrets', label: 'Secrets List'},
-    ];
-
     const Page = route;
     return (
-        <main className="" onClick={navHelper(doUpdateUrl)}>
+        <main className="" onClick={getNavHelper(doUpdateUrl)}>
             <nav className="">
-
                 <div className="">
                     {navItems.map((item, _key) => {
                         return (
@@ -39,10 +32,8 @@ const Layout = ({doUpdateUrl, route, pathname}) => {
 };
 
 export default connect(
-    'selectRoute',
     'selectPathname',
-
+    'selectRoute',
     'doUpdateUrl',
-
     Layout
 );

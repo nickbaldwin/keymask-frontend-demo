@@ -5,7 +5,9 @@ export default {
     getReducer: () => {
         const initialData = {
             data: null,
-            loading: false
+            loading: false,
+            lastFetchFailed: false,
+            lastFetch: null
         };
 
         return (state = initialData, {type, payload}) => {
@@ -17,25 +19,45 @@ export default {
             if (type === 'FETCH_SECRETS_SUCCESS') {
                 return Object.assign({}, state, {
                     loading: false,
-                    // we'll just extract an ID here and insert it as a property
-                    // on the data for this person.
-                    // Normally API will include an id attribute of some kind
-                    // for each object in the results, but not so for this API.
-                    data: payload
+                    data: payload,
+                    lastFetchFailed: false,
+                    lastFetch: Date.now()
+                });
+            }
+            if (type === 'FETCH_SECRETS_FAILURE') {
+                return Object.assign({}, state, {
+                    loading: false,
+                    lastFetchFailed: false,
+                    lastFetch: Date.now()
                 });
             }
             return state;
         };
     },
-    doFetchSecrets:
-        () =>
-        ({dispatch, expressFetch}) => {
-            dispatch({type: 'FETCH_SECRETS_START'});
-            expressFetch().then((payload) => {
-                dispatch({type: 'FETCH_SECRETS_SUCCESS', payload});
-            });
-        },
+    // note apis passed in via extra-args bundle
+    doFetchSecrets: () => ({dispatch, expressFetch}) => {
+        dispatch({type: 'FETCH_SECRETS_START'});
+        expressFetch().then((payload) => {
+            dispatch({type: 'FETCH_SECRETS_SUCCESS', payload});
+        }).catch( (err) => {
+            console.log(err);
+            dispatch({type: 'FETCH_SECRETS_FAILURE'})
+        });
+    },
+    // todo state in reducer
+    doPostSecret: (secret) => ({dispatch, postFetch}) => {
+        dispatch({type: 'POST_SECRET_START'});
+        postFetch(secret).then((payload) => {
+            dispatch({type: 'POST_SECRET_SUCCESS', payload});
+        }).catch( (err) => {
+            console.log(err);
+            dispatch({type: 'POST_SECRET_FAILURE'})
+        });
+    },
     selectSecretsRaw: (state) => state.secrets,
+    selectSecretsLastFetched: (state) => state.secrets.lastFetch,
+    selectSecretsLoading: (state) => state.secrets.loading,
+    selectSecretsFetchFailed: (state) => state.secrets.lastFetchFailed,
     selectSecretsData: (state) => state.secrets.data,
     selectActiveSecret: createSelector(
         'selectRouteParams',
@@ -48,8 +70,9 @@ export default {
             return secretsData.find((s) => s.id === routeParams.id) || null;
         }
     ),
-    reactShouldFetchSecrets: createSelector('selectSecretsRaw', (secretsData) => {
-        if (secretsData.loading || secretsData.data) {
+    reactShouldFetchSecrets: createSelector('selectAppTime', 'selectSecretsLastFetched', 'selectSecretsRaw', (appTime, secretsLastFetched, secretsData) => {
+        let isFresh = appTime < (secretsLastFetched + 15000); //15s for demo
+        if (secretsData.loading || (secretsData.data && isFresh)) {
             return false;
         }
         return {actionCreator: 'doFetchSecrets'};
