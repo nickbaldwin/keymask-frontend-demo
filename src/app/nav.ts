@@ -36,6 +36,7 @@ interface NavItem {
 export const items: RouteNav[] = [
     {id: 'home', url: '/', label: 'Home', page: HomePage},
     {id: 'secrets', url: '/secrets', label: 'Secrets List', page: SecretsList},
+    // todo - notfound default
 ];
 
 export const getRoutes = (): Routes => {
