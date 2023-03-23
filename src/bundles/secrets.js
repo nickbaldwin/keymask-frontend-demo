@@ -6,8 +6,11 @@ export default {
         const initialData = {
             data: null,
             loading: false,
+            sending: false,
             lastFetchFailed: false,
-            lastFetch: null
+            lastFetch: null,
+            lastSendFailed: false,
+            lastSend: null
         };
 
         return (state = initialData, {type, payload}) => {
@@ -27,8 +30,29 @@ export default {
             if (type === 'FETCH_SECRETS_FAILURE') {
                 return Object.assign({}, state, {
                     loading: false,
-                    lastFetchFailed: false,
+                    lastFetchFailed: true,
                     lastFetch: Date.now()
+                });
+            }
+
+            if (type === 'POST_SECRET_START') {
+                return Object.assign({}, state, {
+                    sending: true
+                });
+            }
+            // todo
+            if (type === 'POST_SECRET_SUCCESS') {
+                return Object.assign({}, state, {
+                    sending: false,
+                    lastSendFailed: false,
+                    lastSend: Date.now()
+                });
+            }
+            if (type === 'POST_SECRET_FAILURE') {
+                return Object.assign({}, state, {
+                    sending: false,
+                    lastSendFailed: true,
+                    lastSend: Date.now()
                 });
             }
             return state;
@@ -50,8 +74,9 @@ export default {
         postFetch(secret).then((payload) => {
             dispatch({type: 'POST_SECRET_SUCCESS', payload});
         }).catch( (err) => {
+            console.log("error posting secret in bundle");
             console.log(err);
-            dispatch({type: 'POST_SECRET_FAILURE'})
+            dispatch({type: 'POST_SECRET_FAILURE'});
         });
     },
     selectSecretsRaw: (state) => state.secrets,
