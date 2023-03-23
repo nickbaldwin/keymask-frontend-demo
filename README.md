@@ -10,7 +10,7 @@ Configured with:
 It also has Prettier installed, but removed usage (in lint config)
 
 - // sinks (updating immutable state objects and arrays)
-- // redux-persist-middleware
+- // redux-persist-middleware?
 - // milliseconds
 - // query-string
 - // feather-route-matcher
