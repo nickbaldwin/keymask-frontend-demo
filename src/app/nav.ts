@@ -1,5 +1,5 @@
 import HomePage from 'components/../pages/Home';
-import SecretsList from '../pages/SecretsList';
+import SecretsList from '../pages/Secrets';
 
 /*
     Navigation items: [
@@ -19,11 +19,13 @@ interface RouteNav {
     url: string,
     label: string,
     // todo - typing
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     page: any
 }
 
 interface Routes {
     // todo - type pages
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any
 }
 

@@ -1,57 +1,47 @@
 import React, {useState} from 'react';
 import {connect} from 'redux-bundler-react';
-import {postData} from '../api/fetch';
 
 const Form = ({doPostSecret}) => {
 
-    const [email, setEmail] = useState('');
-    const [secret, setSecret] = useState('');
-    const [message, setMessage] = useState('');
+    const [name, setName] = useState('');
+    const [value, setValue] = useState('');
 
     const handleChange = (e, field: string) => {
         console.log("new value", e.target.value);
-        if (field === 'email') {
-            setEmail(e.target.value);
+        if (field === 'name') {
+            setName(e.target.value);
         }
-        if (field === 'secret') {
-            setSecret(e.target.value);
+        if (field === 'value') {
+            setValue(e.target.value);
         }
     }
     const handleSubmit = (e) => {
         console.log(typeof e);
         e.preventDefault();
-        setEmail('');
-        setSecret('');
-
-        // todo - still need to get toy server to accept post
-        doPostSecret();
-
-        // in meantime, can post to mock server
-        postData("https://m128e.wiremockapi.cloud/addsecret", { answer: 42 }).then((data) => {
-            setMessage(data.message);
-        });
+        setName('');
+        setValue('');
+        doPostSecret({name, value});
     }
 
     return (
         <form onSubmit={handleSubmit}>
             <p>Enter a secret and a recipient</p>
-            <label htmlFor="email" >email</label>
-            <input id="email"
+            <label htmlFor="name" >email</label>
+            <input id="name"
                    type="text"
-                   value={email}
-                   onChange={(e)=>{handleChange(e,'email')}}
+                   value={name}
+                   onChange={(e)=>{handleChange(e,'name')}}
             />
             <br />
-            <label htmlFor="secret" >secret</label>
-            <input id="secret"
+            <label htmlFor="value" >secret</label>
+            <input id="value"
                    type="text"
-                   value={secret}
-                   onChange={(e)=>{handleChange(e,'secret')}}
+                   value={value}
+                   onChange={(e)=>{handleChange(e,'value')}}
             />
             <br />
             <input type="submit" value="Submit"/>
             <br />
-            {message}
         </form>
     );
 };

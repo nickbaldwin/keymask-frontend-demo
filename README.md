@@ -1,4 +1,4 @@
-# React-redux SPA
+#  KeyMask frontend demo
 
 Configured with:
 - Webpack

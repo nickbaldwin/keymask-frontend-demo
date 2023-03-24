@@ -16,7 +16,8 @@ export default {
         return (state = initialData, {type, payload}) => {
             if (type === 'FETCH_SECRETS_START') {
                 return Object.assign({}, state, {
-                    loading: true
+                    loading: true,
+                    initialized: true
                 });
             }
             if (type === 'FETCH_SECRETS_SUCCESS') {
@@ -68,11 +69,13 @@ export default {
             dispatch({type: 'FETCH_SECRETS_FAILURE'})
         });
     },
-    // todo state in reducer
     doPostSecret: (secret) => ({dispatch, postFetch}) => {
         dispatch({type: 'POST_SECRET_START'});
         postFetch(secret).then((payload) => {
             dispatch({type: 'POST_SECRET_SUCCESS', payload});
+            // todo - best option? use reactor?
+            // eslint-disable-next-line no-undef
+            store.doFetchSecrets();
         }).catch( (err) => {
             console.log("error posting secret in bundle");
             console.log(err);
@@ -80,6 +83,7 @@ export default {
         });
     },
     selectSecretsRaw: (state) => state.secrets,
+    selectSecretsInitTime: (state) => state.secrets.initTime,
     selectSecretsLastFetched: (state) => state.secrets.lastFetch,
     selectSecretsLoading: (state) => state.secrets.loading,
     selectSecretsFetchFailed: (state) => state.secrets.lastFetchFailed,
@@ -96,7 +100,7 @@ export default {
         }
     ),
     reactShouldFetchSecrets: createSelector('selectAppTime', 'selectSecretsLastFetched', 'selectSecretsRaw', (appTime, secretsLastFetched, secretsData) => {
-        let isFresh = appTime < (secretsLastFetched + 15000); //15s for demo
+        let isFresh = !!secretsLastFetched && (appTime < (secretsLastFetched + 15000)); //15s for demo
         if (secretsData.loading || (secretsData.data && isFresh)) {
             return false;
         }
