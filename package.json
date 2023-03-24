@@ -1,6 +1,6 @@
 {
   "name": "keymask-frontend-demo",
-  "description": "KeyMask demo",
+  "description": "KeyMask frontend demo",
   "version": "1.0.0",
   "main": "src/index.tsx",
   "repository": "",

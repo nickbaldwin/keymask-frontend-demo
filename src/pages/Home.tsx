@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'redux-bundler-react';
-import Form from 'components/Form';
+import SecretsList from 'components/SecretsList';
 
 const Home: React.FC = () => (
     <div>
@@ -12,7 +12,10 @@ const Home: React.FC = () => (
             <li>todo -  to a simple static api server - POST a secret and get a response</li>
         </ul>
         <br />
-        <Form />
+
+
+        <SecretsList />
+
     </div>
 );
 
